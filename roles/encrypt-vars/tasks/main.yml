@@ -1,10 +1,10 @@
 ---
-# - name: Include all YAML files from directory
-#   ansible.builtin.include_vars:
-#     dir: vars
-#     name: configs
-#     extensions:
-#       - 'yaml'
+- name: Include all YAML files from directory
+  ansible.builtin.include_vars:
+    dir: vars
+    name: configs
+    extensions:
+      - 'yaml'
 
 - name: Make copy of variables for further mutation
   set_fact: 

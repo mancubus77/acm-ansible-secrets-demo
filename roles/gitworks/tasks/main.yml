@@ -20,10 +20,21 @@
     - git config user.name "ZTP ROBO"
     - git config user.email ztp@ztp.com
 
+- name: Read Secrets file
+  ansible.builtin.include_vars:
+    dir: "/tmp/git-secrets"
+    name: configs_in_git
+    extensions:
+      - 'json'
+
+- name: Merge secrets file with new values
+  sef_fact:
+    orig: "{{ orig | combine(configs_in_git) }}"
+
 - name: Save to JSON
   copy:
     content: "{{ orig | to_nice_json }}"
-    dest: "/tmp/git-secrets/kube-secrets.json"
+    dest: "/tmp/git-secrets/kube-secrets1.json"
 
 - name: Commit changes and push file to repo
   shell: "{{ item }}"
@@ -31,6 +42,6 @@
     chdir: "/tmp/git-secrets"
   with_items:
     - git add .
-    - 'git commit -a -m "Ansible | Update secrets" 2>&1 >> /dev/null'
+    - git commit -a -m "Ansible | Update secrets"
     - git push 
   ignore_errors: true
