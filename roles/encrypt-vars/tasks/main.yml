@@ -15,7 +15,7 @@
 
 - name: Iterate variables section for further encryption
   include_tasks: iter-vars.yaml
-  with_items: "{{ configs | dict2items }}"
+  with_items: "{{ configs | to_yaml | dict2items }}"
 
 # - debug: 
 #     msg: "{{ orig | to_yaml }}"
