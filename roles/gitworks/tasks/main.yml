@@ -1,0 +1,36 @@
+---
+- name: Ensure directoy is empty
+  ansible.builtin.file:
+    path: "/tmp/git-secrets"
+    state: absent
+  ignore_errors: true
+
+- name: Create folder
+  ansible.builtin.file:
+    path: "/tmp/git-secrets"
+    state: directory
+
+- name: Checkout repo
+  shell: "{{ item }}"
+  args:
+    chdir: "/tmp/git-secrets"
+  with_items:
+    - rm -rf .git
+    - git clone "{{ acm_git | regex_replace('(https:\/\/)', giturl) }}" . 
+    - git config user.name "ZTP ROBO"
+    - git config user.email ztp@ztp.com
+
+- name: Save to JSON
+  copy:
+    content: "{{ orig | to_nice_json }}"
+    dest: "/tmp/git-secrets/kube-secrets.json"
+
+- name: Commit changes and push file to repo
+  shell: "{{ item }}"
+  args:
+    chdir: "/tmp/git-secrets"
+  with_items:
+    - git add .
+    - 'git commit -a -m "Ansible | Update secrets" 2>&1 >> /dev/null'
+    - git push 
+  ignore_errors: true

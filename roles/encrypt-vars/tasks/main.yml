@@ -1,0 +1,56 @@
+---
+- name: Include all YAML files from directory
+  ansible.builtin.include_vars:
+    dir: vars
+    name: configs
+    extensions:
+      - 'yaml'
+
+- name: Make copy of variables for further mutation
+  set_fact: 
+    orig: "{{ configs }}"
+
+- debug: var=orig
+  tags: debug
+
+- name: Iterate variables section for further encryption
+  include_tasks: iter-vars.yaml
+  with_items: "{{ configs | dict2items }}"
+
+# - debug: 
+#     msg: "{{ orig | to_yaml }}"
+
+
+# - name: Save to JSON
+#   copy:
+#     content: "{{ orig | to_nice_json }}"
+#     dest: "file.json"
+
+- name: Include role to push file to repo
+  include_role:
+    name: gitworks  
+
+
+# - set_fact:
+#     jsonVar: "{{ lookup('file', 'file.json') | from_json }}"
+
+# - debug: 
+#     msg: " {{ jsonVar.set1.config1 | ansible.builtin.unvault(vault_key) }}"
+
+# - name: Load variables from file
+#   debug: msg="jjj"
+  
+# - name: Include all .json and .jsn files in vars/all and all nested directories (2.3)
+#   ansible.builtin.include_vars:
+#     dir: vars
+#     extensions:
+#       - 'yaml'
+
+# - set_fact:
+#     template_data: "{{ 'admin'|vault('Optus123') }}"
+
+# - debug:
+#     msg: "{{ configs.config1 }}"
+
+# - debug:
+#     msg: "{{ template_data }}"

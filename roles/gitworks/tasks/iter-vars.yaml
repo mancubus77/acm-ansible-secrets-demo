@@ -1,0 +1,10 @@
+- set_fact: 
+    config_level: "{{ item.key }}"
+
+- include_tasks: encrypt-vars.yaml
+  loop: "{{ item.value | dict2items }}"
+  loop_control:
+    loop_var: outer_item
+
+# - set_fact:
+#     "{{ item.key }}": "{{ item.value }}"

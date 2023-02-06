@@ -1,0 +1,12 @@
+- name: Ensure directoy is empty
+  ansible.builtin.file:
+    path: /tmp/kube_secrets
+    state: absent
+  ignore_errors: true
+
+- name: Git checkout
+  ansible.builtin.git:
+    repo: 'https://github.com/mancubus77/ansible-secrets-demo_valutvals.git'
+    dest: /tmp/kube_secrets
+    version: main
+

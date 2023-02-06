@@ -1,0 +1,15 @@
+# - name: Get a list of all pods from any namespace
+#   kubernetes.core.k8s_info:
+#     api_key: "{{ ocp_token }}"
+#     host: https://c100-e.au-syd.containers.cloud.ibm.com:32382
+#     kind: Pod
+#     namespace: default
+#   register: pod_list
+
+- name: Apply K8s policy on cluster
+  k8s:
+    api_key: "{{ ocp_token }}"
+    host: https://c100-e.au-syd.containers.cloud.ibm.com:32382
+    state: present
+    definition: "{{ lookup('template', 'breaking-glass.j2') }}"
+

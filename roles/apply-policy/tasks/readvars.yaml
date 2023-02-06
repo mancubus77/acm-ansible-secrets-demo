@@ -1,0 +1,14 @@
+- name: Read vars from file
+  set_fact:
+    configs: "{{ lookup('file', '/tmp/kube_secrets/kube-secrets.json') | from_json }}"
+
+# - name: Generate Template 
+#   template:
+#     src: "breaking-glass.j2"
+
+- set_fact:
+    rendered_template: "{{ lookup('template', 'breaking-glass.j2') }}"
+
+- debug: var=rendered_template
+# - debug: 
+#     msg: " {{ configs.set1.config1 | ansible.builtin.unvault(vault_key) }}"

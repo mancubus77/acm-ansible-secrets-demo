@@ -1,0 +1,22 @@
+---
+- debug:
+    msg: "TOP: {{ config_level }}, {{ outer_item.key }}: {{ outer_item.value }}"
+  tags: debug
+
+- debug: 
+    msg: "{{ config_level, orig[config_level] }}"
+  tags: debug
+
+- set_fact:
+    orig: "{{ orig | combine(new_item, recursive=true) }}"
+  vars: 
+    salt: "{{2**256}}"
+    new_item: "{{ { config_level :{outer_item.key: outer_item.value|vault(vault_key, salt=salt) } } }}"
+    # new_item: "{ '{{ outer_item.key }}': '{{ outer_item.value|vault(vault_key) }}' }"
+
+# - name: ONE
+#   set_fact:
+#     orig: "{{ "{ 'key': 'value' }" }}
+
+# - debug: 
+#     msg: "{{ orig }}"

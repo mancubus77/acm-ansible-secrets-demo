@@ -1,0 +1,62 @@
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: pl-sk-secret
+  namespace: sk
+spec:
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: namespace-secret
+        spec:
+          namespaceSelector:
+            exclude:
+              - kube-*
+            include:
+              - custom-policies
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  key: "{{ configs.set1.config1 | ansible.builtin.unvault(vault_key) | b64encode }}"
+                kind: Secret
+                metadata:
+                  name: secret
+                  namespace: sk
+                type: Opaque
+          remediationAction: enforce
+          severity: low
+  remediationAction: enforce
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: pl-sk-secret-placement
+  namespace: sk
+spec:
+  clusterConditions: []
+  clusterSelector:
+    matchExpressions:
+      - key: installer.name
+        operator: In
+        values:
+          - multiclusterhub
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: pl-sk-secret-placement-binding
+  namespace: sk
+placementRef:
+  name: pl-sk-secret-placement
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+subjects:
+  - name: pl-sk-secret
+    apiGroup: policy.open-cluster-management.io
+    kind: Policy
