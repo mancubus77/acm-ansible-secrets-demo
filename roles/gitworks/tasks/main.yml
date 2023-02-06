@@ -28,7 +28,7 @@
       - 'json'
 
 - name: Merge secrets file with new values
-  sef_fact:
+  set_fact:
     orig: "{{ orig | combine(configs_in_git) }}"
 
 - name: Save to JSON
