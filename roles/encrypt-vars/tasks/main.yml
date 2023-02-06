@@ -8,14 +8,15 @@
 
 - name: Make copy of variables for further mutation
   set_fact: 
-    orig: "{{ configs }}"
+    orig: "{{ configs | from_yaml }}"
+    configs: "{{ configs | from_yaml }}"
 
 - debug: var=orig
   tags: debug
 
 - name: Iterate variables section for further encryption
   include_tasks: iter-vars.yaml
-  with_items: "{{ configs | from_yaml | dict2items }}"
+  with_items: "{{ configs |  | dict2items }}"
 
 # - debug: 
 #     msg: "{{ orig | to_yaml }}"
