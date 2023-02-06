@@ -22,8 +22,9 @@
 
 - name: Read Secrets file
   ansible.builtin.include_vars:
-    dir: "/tmp/git-secrets"
+    dir: "/tmp/git-secrets/"
     name: configs_in_git
+    depth: 1
     extensions:
       - 'json'
 
