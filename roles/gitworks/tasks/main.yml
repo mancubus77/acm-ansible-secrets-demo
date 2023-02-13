@@ -30,7 +30,7 @@
 
 - name: Merge secrets file with new values
   set_fact:
-    orig: "{{ orig | combine(configs_in_git) }}"
+    orig: "{{ configs_in_git | combine(orig, recursive=true) }}"
 
 - name: Save to JSON
   copy:
