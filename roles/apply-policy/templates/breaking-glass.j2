@@ -26,8 +26,8 @@ spec:
                   key: "{{ configs.set1.config1 | ansible.builtin.unvault(vault_key) | b64encode }}"
                 kind: Secret
                 metadata:
-                  name: secret
-                  namespace: sk
+                  name: secret-demo
+                  namespace: secrets-demo
                 type: Opaque
           remediationAction: enforce
           severity: low
