@@ -3,7 +3,7 @@ apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
   name: pl-sk-secret
-  namespace: sk
+  namespace: skozlov
 spec:
   disabled: false
   policy-templates:
@@ -23,11 +23,11 @@ spec:
               objectDefinition:
                 apiVersion: v1
                 data:
-                  key: "{{ configs.set1.config1 | ansible.builtin.unvault(vault_key) | b64encode }}"
+                  SECRET: "{{ configs.demo_app.env_secret | ansible.builtin.unvault(vault_key) | b64encode }}"
                 kind: Secret
                 metadata:
                   name: secret-demo
-                  namespace: secrets-demo
+                  namespace: skozlov
                 type: Opaque
           remediationAction: enforce
           severity: low
@@ -37,21 +37,21 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: pl-sk-secret-placement
-  namespace: sk
+  namespace: skozlov
 spec:
   clusterConditions: []
   clusterSelector:
     matchExpressions:
-      - key: installer.name
+      - key: name
         operator: In
         values:
-          - multiclusterhub
+          - local-cluster
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
   name: pl-sk-secret-placement-binding
-  namespace: sk
+  namespace: skozlov
 placementRef:
   name: pl-sk-secret-placement
   apiGroup: apps.open-cluster-management.io

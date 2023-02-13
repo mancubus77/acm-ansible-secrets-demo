@@ -9,7 +9,8 @@
 - name: Apply K8s policy on cluster
   k8s:
     api_key: "{{ ocp_token }}"
-    host: https://c100-e.au-syd.containers.cloud.ibm.com:32382
+    host: https://api.hub.sandbox216.opentlc.com:6443
     state: present
+    validate_certs: false
     definition: "{{ lookup('template', 'breaking-glass.j2') }}"
 
